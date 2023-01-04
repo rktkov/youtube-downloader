@@ -56,6 +56,27 @@ func (dl *Downloader) Download(ctx context.Context, v *youtube.Video, format *yo
 	return dl.videoDLWorker(ctx, out, v, format)
 }
 
+// DownloadWithProgressBar : Starting download video by arguments.
+func (dl *Downloader) DownloadWithProgressBar(ctx context.Context,
+	v *youtube.Video, format *youtube.Format, outputFile string,
+	bar *mpb.Bar) error {
+	dl.logf("Video '%s' - Quality '%s' - Codec '%s'", v.Title, format.QualityLabel, format.MimeType)
+	destFile, err := dl.getOutputFile(v, format, outputFile)
+	if err != nil {
+		return err
+	}
+
+	// Create output file
+	out, err := os.Create(destFile)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	dl.logf("Download to file=%s", destFile)
+	return dl.videoDLWorkerWithBar(ctx, out, v, format, bar)
+}
+
 // DownloadComposite : Downloads audio and video streams separately and merges them via ffmpeg.
 func (dl *Downloader) DownloadComposite(ctx context.Context, outputFile string, v *youtube.Video, quality string, mimetype string) error {
 	videoFormat, audioFormat, err1 := getVideoAudioFormats(v, quality, mimetype)
@@ -183,6 +204,28 @@ func (dl *Downloader) videoDLWorker(ctx context.Context, out *os.File, video *yo
 	}
 
 	progress.Wait()
+	return nil
+}
+
+func (dl *Downloader) videoDLWorkerWithBar(ctx context.Context,
+	out *os.File, video *youtube.Video, format *youtube.Format,
+	bar *mpb.Bar) error {
+	stream, size, err := dl.GetStreamContext(ctx, video, format)
+	if err != nil {
+		return err
+	}
+
+	prog := &progress{
+		contentLength: float64(size),
+	}
+
+	reader := bar.ProxyReader(stream)
+	mw := io.MultiWriter(out, prog)
+	_, err = io.Copy(mw, reader)
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 
