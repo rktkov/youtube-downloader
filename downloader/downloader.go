@@ -40,6 +40,7 @@ func (dl *Downloader) getOutputFile(v *youtube.Video, format *youtube.Format, ou
 // Download : Starting download video by arguments.
 func (dl *Downloader) Download(ctx context.Context, v *youtube.Video, format *youtube.Format, outputFile string) error {
 	dl.logf("Video '%s' - Quality '%s' - Codec '%s'", v.Title, format.QualityLabel, format.MimeType)
+
 	destFile, err := dl.getOutputFile(v, format, outputFile)
 	if err != nil {
 		return err
