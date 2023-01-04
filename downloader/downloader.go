@@ -9,9 +9,10 @@ import (
 	"os/exec"
 	"path/filepath"
 
-	"github.com/kkdai/youtube/v2"
 	"github.com/vbauerster/mpb/v5"
 	"github.com/vbauerster/mpb/v5/decor"
+
+	"github.com/rktkov/youtube-downloader/v2"
 )
 
 // Downloader offers high level functions to download videos into files

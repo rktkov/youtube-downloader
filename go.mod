@@ -1,4 +1,4 @@
-module github.com/kkdai/youtube/v2
+module github.com/rktkov/youtube-downloader/v2
 
 go 1.18
 
@@ -43,5 +43,3 @@ require (
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
-
-replace github.com/kkdai/youtube/v2 => ../youtube-downloader

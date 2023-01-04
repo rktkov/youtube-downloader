@@ -11,10 +11,11 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/kkdai/youtube/v2"
-	ytdl "github.com/kkdai/youtube/v2/downloader"
 	"github.com/spf13/pflag"
 	"golang.org/x/net/http/httpproxy"
+
+	"github.com/rktkov/youtube-downloader/v2"
+	ytdl "github.com/rktkov/youtube-downloader/v2/downloader"
 )
 
 var (
